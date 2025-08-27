@@ -11,7 +11,12 @@ WORKDIR /cpp/whisper.cpp
 
 RUN ./models/download-ggml-model.sh base.en
 
-RUN cmake -B build && cmake --build build --config Release
+RUN cmake -B build \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DGGML_NO_SIMD_DOT=ON \
+    -DGGML_NO_F16C=ON \
+    -DGGML_NO_ACCELERATE=ON \
+ && cmake --build build
 
 # Stage 2: Build Go application
 FROM golang:1.23 as go-builder
